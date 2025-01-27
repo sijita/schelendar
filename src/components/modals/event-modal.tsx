@@ -7,6 +7,7 @@ import {
   ModalFooter,
   Input,
   Button,
+  Textarea,
 } from '@heroui/react';
 import { IconCalendar, IconClock } from '@tabler/icons-react';
 
@@ -24,23 +25,35 @@ export function EventModal({ isOpen, onClose, dateValue }: EventModalProps) {
           <h3 className="text-lg font-semibold">Añadir evento</h3>
         </ModalHeader>
         <ModalBody>
-          <Input label="Título" variant="bordered" />
-          <div className="flex gap-4">
-            <Input
-              value={dateValue}
-              label="Fecha"
-              startContent={<IconCalendar className="w-4 h-4 text-gray-400" />}
-              type="date"
-              variant="bordered"
-              isDisabled
-            />
+          <div className="flex items-center gap-10">
+            <div className="flex items-center gap-1">
+              <Button variant="light" isIconOnly isDisabled>
+                <IconCalendar className="text-primary" />
+              </Button>
+              <span className="text-lg text-center font-medium capitalize">
+                {new Date(dateValue).toLocaleDateString('es-CO', {
+                  day: 'numeric',
+                  weekday: 'short',
+                })}
+              </span>
+            </div>
             <Input
               label="Hora"
               startContent={<IconClock className="w-4 h-4 text-gray-400" />}
               type="time"
-              variant="bordered"
+              variant="flat"
             />
           </div>
+          <Input
+            label="Título"
+            placeholder="Nombre del evento"
+            variant="flat"
+          />
+          <Textarea
+            label="Descripción"
+            placeholder="Lorem ipsum dolor sit amet"
+            variant="flat"
+          />
         </ModalBody>
         <ModalFooter>
           <Button className="w-full mb-1" color="primary" onPress={onClose}>
