@@ -5,7 +5,7 @@ import Calendar from '@/components/calendar/calendar';
 
 export default function Aside() {
   return (
-    <aside className="rounded-3xl w-[300px] flex flex-col gap-3">
+    <aside className="rounded-3xl lg:w-[300px] flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3 p-5 bg-[#181818] rounded-2xl">
         <div className="flex items-center gap-2">
           <Avatar
