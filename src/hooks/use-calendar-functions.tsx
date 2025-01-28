@@ -1,4 +1,7 @@
+import { useCurrentDateStore } from '@/store/use-current-date-store';
+import type { Event } from '@/types/event';
 import {
+  addDays,
   addWeeks,
   eachDayOfInterval,
   endOfMonth,
@@ -10,19 +13,10 @@ import {
   startOfWeek,
   subWeeks,
 } from 'date-fns';
-import { useState } from 'react';
 
-interface CalendarProps {
-  onSelectDate: (date: Date) => void;
-  events: { date: Date }[];
-}
-
-export default function useCalendarFunctions({
-  onSelectDate,
-  events,
-}: CalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+export default function useCalendarFunctions({ events }: { events: Event[] }) {
+  const currentDate = useCurrentDateStore((state) => state.currentDate);
+  const setCurrentDate = useCurrentDateStore((state) => state.setCurrentDate);
 
   const monthDays = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentDate)),
@@ -38,9 +32,7 @@ export default function useCalendarFunctions({
   };
 
   const goToToday = () => setCurrentDate(new Date());
-
   const goToNextWeek = () => setCurrentDate(addWeeks(currentDate, 1));
-
   const goToPreviousWeek = () => setCurrentDate(subWeeks(currentDate, 1));
 
   const previousMonth = () =>
@@ -54,21 +46,14 @@ export default function useCalendarFunctions({
     );
 
   const handleDateClick = (date: Date) => {
-    setSelectedDate(date);
-    onSelectDate(date);
+    setCurrentDate(date);
   };
 
   const handleYearChange = (year: string) =>
     setCurrentDate(new Date(parseInt(year), currentDate.getMonth()));
 
-  const hasEvents = (date: Date) => {
-    return events.some(
-      (event: { date: Date }) =>
-        event.date.getDate() === date.getDate() &&
-        event.date.getMonth() === date.getMonth() &&
-        event.date.getFullYear() === date.getFullYear()
-    );
-  };
+  const hasEvents = (date: Date) =>
+    events.some((event) => event.date === format(date, 'dd-MM-yyyy'));
 
   return {
     goToToday,
@@ -78,7 +63,6 @@ export default function useCalendarFunctions({
     format,
     isSameMonth,
     isToday,
-    selectedDate,
     currentDate,
     setCurrentDate,
     monthDays,
@@ -88,5 +72,7 @@ export default function useCalendarFunctions({
     handleYearChange,
     hasEvents,
     years,
+    startOfWeek,
+    addDays,
   };
 }

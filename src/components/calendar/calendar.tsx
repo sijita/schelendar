@@ -5,19 +5,13 @@ import { Button, Select, SelectItem } from '@heroui/react';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { EventModal } from '@/components/modals/event-modal';
 import { useState } from 'react';
+import type { Event } from '@/types/event';
 
-interface CalendarProps {
-  onSelectDate: (date: Date) => void;
-  events: { date: Date; title: string }[];
-}
-
-export default function Calendar({ onSelectDate, events }: CalendarProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export default function Calendar({ events }: { events: Event[] }) {
   const {
     isToday,
     format,
     isSameMonth,
-    selectedDate,
     currentDate,
     handleDateClick,
     monthDays,
@@ -26,12 +20,14 @@ export default function Calendar({ onSelectDate, events }: CalendarProps) {
     years,
     handleYearChange,
     hasEvents,
-  } = useCalendarFunctions({ onSelectDate, events });
+  } = useCalendarFunctions({ events });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
       <EventModal
-        dateValue={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
+        dateValue={currentDate ? format(currentDate, 'yyyy-MM-dd') : ''}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
@@ -99,12 +95,12 @@ export default function Calendar({ onSelectDate, events }: CalendarProps) {
             transition={{ duration: 0.3 }}
             className="grid grid-cols-7 gap-1"
           >
-            {monthDays.map((date, idx) => (
+            {monthDays.map((date, i) => (
               <motion.button
                 key={date.toString()}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.02 }}
+                transition={{ delay: i * 0.02 }}
                 whileHover={{ scale: 1.1 }}
                 onClick={() => {
                   handleDateClick(date);
@@ -112,14 +108,19 @@ export default function Calendar({ onSelectDate, events }: CalendarProps) {
                 }}
                 className={`h-[40px] rounded-lg flex flex-col items-center justify-center relative transition-all duration-200 ${
                   !isSameMonth(date, currentDate) && 'text-gray-500'
-                } ${isToday(date) && 'bg-primary text-black'} ${
-                  selectedDate?.toDateString() === date.toDateString() &&
-                  'bg-background'
+                } ${
+                  isToday(date) && 'bg-primary text-black hover:text-white'
                 } hover:bg-background`}
               >
                 <span className="text-sm">{format(date, 'd')}</span>
                 {hasEvents(date) && (
-                  <div className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
+                  <div
+                    className={`absolute bottom-1 w-1 h-1 rounded-full z-50 ${
+                      hasEvents(date) && !isToday(date)
+                        ? 'bg-primary'
+                        : 'bg-background'
+                    }`}
+                  />
                 )}
               </motion.button>
             ))}

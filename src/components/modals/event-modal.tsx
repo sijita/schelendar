@@ -16,7 +16,7 @@ export function EventModal({ isOpen, onClose, dateValue }: EventModalProps) {
           <h3 className="text-lg font-semibold">Añadir evento</h3>
         </ModalHeader>
         <ModalBody className="mb-2">
-          <EventsForm dateValue={dateValue} />
+          <EventsForm dateValue={dateValue} onCloseModal={onClose} />
         </ModalBody>
       </ModalContent>
     </Modal>
