@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Sora } from 'next/font/google';
 import './globals.css';
+import Providers from '@/components/ui/providers';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -18,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className={`${sora.className} antialiased`}>{children}</body>
+      <body className={`${sora.className} antialiased`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

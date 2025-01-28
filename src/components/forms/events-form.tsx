@@ -1,14 +1,30 @@
+'use client';
+import useAddEvent from '@/hooks/use-add-event';
 import { Input, Button, Textarea } from '@heroui/react';
 import { IconCalendar, IconClock } from '@tabler/icons-react';
 
-export default function EventsForm({ dateValue }: { dateValue: string }) {
+export default function EventsForm({
+  dateValue,
+  onCloseModal,
+}: {
+  dateValue: string;
+  onCloseModal: () => void;
+}) {
+  const { onSubmit } = useAddEvent({ onCloseModal });
+
   return (
-    <form className="flex flex-col gap-3">
+    <form action={onSubmit} className="flex flex-col gap-3">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-1">
           <Button variant="light" isIconOnly isDisabled>
             <IconCalendar className="text-primary" />
           </Button>
+          <input
+            className="hidden"
+            type="date"
+            name="date"
+            defaultValue={dateValue}
+          />
           <span className="text-lg text-center font-medium capitalize">
             {new Date(dateValue).toLocaleDateString('es-CO', {
               day: 'numeric',
@@ -17,24 +33,31 @@ export default function EventsForm({ dateValue }: { dateValue: string }) {
           </span>
         </div>
         <Input
+          name="hour"
           label="Hora"
           startContent={<IconClock className="w-4 h-4 text-gray-400" />}
           type="time"
           variant="flat"
+          isRequired
         />
       </div>
-      <Input label="Título" placeholder="Nombre del evento" variant="flat" />
+      <Input
+        name="title"
+        label="Título"
+        placeholder="Nombre del evento"
+        variant="flat"
+        min={5}
+        isRequired
+      />
       <Textarea
+        name="description"
         label="Descripción"
         placeholder="Lorem ipsum dolor sit amet"
         variant="flat"
+        min={5}
+        isRequired
       />
-      <Button
-        className="w-full mb-1"
-        color="primary"
-        onPress={() => console.log('submit')}
-        type="submit"
-      >
+      <Button className="w-full mb-1" color="primary" type="submit">
         Añadir
       </Button>
     </form>

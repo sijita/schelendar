@@ -31,10 +31,12 @@ export function Header({ view }: HeaderProps) {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
         <div className="w-full sm:w-auto flex justify-between gap-5">
           <h1 className="text-2xl font-semibold text-black capitalize text-pretty">
-            {currentDate.toLocaleDateString('es-CO', {
-              month: 'long',
-              year: 'numeric',
-            }).replace(' de ', ', ')}
+            {currentDate
+              .toLocaleDateString('es-CO', {
+                month: 'long',
+                year: 'numeric',
+              })
+              .replace(' de ', ', ')}
           </h1>
           <div className="flex sm:hidden items-center gap-5">
             <div className="flex gap-1">
@@ -109,7 +111,7 @@ export function Header({ view }: HeaderProps) {
         </div>
       </div>
       <div className="w-full overflow-auto">
-        <div className="grid grid-cols-8 items-center gap-3 w-[1000px] sm:w-full pb-5">
+        <div className="grid grid-cols-8 items-center gap-3 w-[1000px] xl:w-full pb-5">
           <Button className="text-background" variant="light" isDisabled>
             <IconCalendar size={20} />
           </Button>
