@@ -5,14 +5,9 @@ import { Button, Select, SelectItem } from '@heroui/react';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { EventModal } from '@/components/modals/event-modal';
 import { useState } from 'react';
+import type { Event } from '@/types/event';
 
-interface CalendarProps {
-  onSelectDate: (date: Date) => void;
-  events: { date: Date; title: string }[];
-}
-
-export default function Calendar({ onSelectDate, events }: CalendarProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export default function Calendar({ events }: { events: Event[] }) {
   const {
     isToday,
     format,
@@ -26,7 +21,9 @@ export default function Calendar({ onSelectDate, events }: CalendarProps) {
     years,
     handleYearChange,
     hasEvents,
-  } = useCalendarFunctions({ onSelectDate, events });
+  } = useCalendarFunctions({ events });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
@@ -112,14 +109,20 @@ export default function Calendar({ onSelectDate, events }: CalendarProps) {
                 }}
                 className={`h-[40px] rounded-lg flex flex-col items-center justify-center relative transition-all duration-200 ${
                   !isSameMonth(date, currentDate) && 'text-gray-500'
-                } ${isToday(date) && 'bg-primary text-black'} ${
+                } ${
+                  isToday(date) && 'bg-primary text-black hover:text-white'
+                } ${
                   selectedDate?.toDateString() === date.toDateString() &&
                   'bg-background'
                 } hover:bg-background`}
               >
                 <span className="text-sm">{format(date, 'd')}</span>
                 {hasEvents(date) && (
-                  <div className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
+                  <div
+                    className={`absolute bottom-1 w-1 h-1 rounded-full z-50 ${
+                      hasEvents(date) ? 'bg-primary' : 'bg-background'
+                    }`}
+                  />
                 )}
               </motion.button>
             ))}

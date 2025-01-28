@@ -19,7 +19,7 @@ export default function useAddEvent({
       const parsedEvent = await eventSchema.safeParseAsync({
         ...data,
         id: Math.random().toString(36).substring(2, 9),
-        date: format(formData.get('date') as string, 'dd-MM-yyyy', {
+        date: format(new Date(`${data.date}T00:00:00`), 'dd-MM-yyyy', {
           locale: es,
         }),
       } as Event);

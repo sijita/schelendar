@@ -2,6 +2,8 @@
 import useAddEvent from '@/hooks/use-add-event';
 import { Input, Button, Textarea } from '@heroui/react';
 import { IconCalendar, IconClock } from '@tabler/icons-react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function EventsForm({
   dateValue,
@@ -26,9 +28,8 @@ export default function EventsForm({
             defaultValue={dateValue}
           />
           <span className="text-lg text-center font-medium capitalize">
-            {new Date(dateValue).toLocaleDateString('es-CO', {
-              day: 'numeric',
-              weekday: 'short',
+            {format(new Date(`${dateValue}T00:00:00`), 'EEE d', {
+              locale: es,
             })}
           </span>
         </div>

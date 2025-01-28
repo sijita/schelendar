@@ -1,3 +1,4 @@
+import type { Event } from '@/types/event';
 import {
   addWeeks,
   eachDayOfInterval,
@@ -12,15 +13,7 @@ import {
 } from 'date-fns';
 import { useState } from 'react';
 
-interface CalendarProps {
-  onSelectDate: (date: Date) => void;
-  events: { date: Date }[];
-}
-
-export default function useCalendarFunctions({
-  onSelectDate,
-  events,
-}: CalendarProps) {
+export default function useCalendarFunctions({ events }: { events: Event[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -55,20 +48,13 @@ export default function useCalendarFunctions({
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
-    onSelectDate(date);
   };
 
   const handleYearChange = (year: string) =>
     setCurrentDate(new Date(parseInt(year), currentDate.getMonth()));
 
-  const hasEvents = (date: Date) => {
-    return events.some(
-      (event: { date: Date }) =>
-        event.date.getDate() === date.getDate() &&
-        event.date.getMonth() === date.getMonth() &&
-        event.date.getFullYear() === date.getFullYear()
-    );
-  };
+  const hasEvents = (date: Date) =>
+    events.some((event) => event.date === format(date, 'dd-MM-yyyy'));
 
   return {
     goToToday,
