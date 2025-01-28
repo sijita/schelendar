@@ -1,18 +1,15 @@
 'use client';
 import useAddEvent from '@/hooks/use-add-event';
+import { useCurrentDateStore } from '@/store/use-current-date-store';
 import { Input, Button, Textarea } from '@heroui/react';
 import { IconCalendar, IconClock } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-export default function EventsForm({
-  dateValue,
-  onCloseModal,
-}: {
-  dateValue: string;
-  onCloseModal: () => void;
-}) {
-  const { onSubmit } = useAddEvent({ onCloseModal });
+export default function AddEventForm() {
+  const { onSubmit } = useAddEvent();
+  const { currentDate } = useCurrentDateStore((state) => state);
+  const formattedDate = currentDate && format(currentDate, 'yyyy-MM-dd');
 
   return (
     <form action={onSubmit} className="flex flex-col gap-3">
@@ -25,10 +22,10 @@ export default function EventsForm({
             className="hidden"
             type="date"
             name="date"
-            defaultValue={dateValue}
+            defaultValue={formattedDate}
           />
           <span className="text-lg text-center font-medium capitalize">
-            {format(new Date(`${dateValue}T00:00:00`), 'EEE d', {
+            {format(new Date(`${formattedDate}T00:00:00`), 'EEE d', {
               locale: es,
             })}
           </span>

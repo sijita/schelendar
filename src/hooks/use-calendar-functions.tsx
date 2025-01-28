@@ -13,6 +13,7 @@ import {
   startOfWeek,
   subWeeks,
 } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function useCalendarFunctions({ events }: { events: Event[] }) {
   const currentDate = useCurrentDateStore((state) => state.currentDate);
@@ -56,6 +57,7 @@ export default function useCalendarFunctions({ events }: { events: Event[] }) {
     events.some((event) => event.date === format(date, 'dd-MM-yyyy'));
 
   return {
+    es,
     goToToday,
     goToNextWeek,
     goToPreviousWeek,
