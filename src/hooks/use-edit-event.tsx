@@ -1,28 +1,32 @@
 import { eventSchema } from '@/schemas/event-schema';
 import { useEventsStore } from '@/store/use-events-store';
 import { Event } from '@/types/event';
-import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { toast } from 'sonner';
+import useHandleParams from './use-handle-params';
 import { useModalHandlingStore } from '@/store/use-modal-handling';
 
-export default function useAddEvent() {
-  const onCloseAddModal = useModalHandlingStore(
+export default function useEditEvent() {
+  const onCloseEditModal = useModalHandlingStore(
     (state) => state.setIsClosedModal
   );
-  const addEvent = useEventsStore((state) => state.addEvent);
+  const { deleteParams, params } = useHandleParams();
+  const editEvent = useEventsStore((state) => state.editEvent);
+  const events = useEventsStore((state) => state.events);
+  const eventToEdit = events.find((event) => event.id === params.get('id'));
 
-  const onSubmit = async (formData: FormData) => {
+  const onSubmit = async (formData: FormData, eventId: string) => {
     const data = Object.fromEntries(formData);
 
     try {
       const parsedEvent = await eventSchema.safeParseAsync({
         ...data,
-        id: Math.random().toString(36).substring(2, 9),
+        id: eventId,
         date: format(new Date(`${data.date}T00:00:00`), 'dd-MM-yyyy', {
           locale: es,
         }),
-      } as Event);
+      } as Partial<Event>);
 
       if (!parsedEvent.success) {
         const errorMessages = Object.entries(
@@ -34,21 +38,23 @@ export default function useAddEvent() {
         toast.error(errorMessages);
       }
 
-      const success = addEvent(parsedEvent.data as Event);
+      const success = editEvent(eventId, parsedEvent.data as Partial<Event>);
 
       if (!success) {
         toast.error('Ya existe un evento en ese horario.');
         return;
       }
 
-      toast.success('Evento creado correctamente');
-      onCloseAddModal('addModal');
+      deleteParams();
+      toast.success('Evento editado correctamente');
+      onCloseEditModal('editModal');
     } catch {
-      toast.error('Error al crear el evento. Por favor, intenta nuevamente.');
+      toast.error('Error al editar el evento. Por favor, intenta nuevamente.');
     }
   };
 
   return {
     onSubmit,
+    eventToEdit,
   };
 }
