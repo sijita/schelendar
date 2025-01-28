@@ -1,11 +1,8 @@
 'use client';
 import useCalendarFunctions from '@/hooks/use-calendar-functions';
+import { useEventsStore } from '@/store/use-events-store';
 import { Button, Tab, Tabs } from '@heroui/react';
-import {
-  IconCalendar,
-  IconChevronLeft,
-  IconChevronRight,
-} from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 interface HeaderProps {
   view: 'month' | 'week' | 'day';
@@ -13,18 +10,11 @@ interface HeaderProps {
 }
 
 export function Header({ view }: HeaderProps) {
-  const {
-    goToToday,
-    currentDate,
-    getCurrentWeekDays,
-    goToNextWeek,
-    goToPreviousWeek,
-  } = useCalendarFunctions({
-    onSelectDate: () => {},
-    events: [],
-  });
-  const currentDay = currentDate.getDate();
-  const weekDays = getCurrentWeekDays().map((d) => d.getDate());
+  const { events } = useEventsStore((state) => state);
+  const { goToToday, currentDate, goToNextWeek, goToPreviousWeek, isToday } =
+    useCalendarFunctions({
+      events,
+    });
 
   return (
     <div className="p-5 flex flex-col gap-10 bg-[#FFF] rounded-t-2xl">
@@ -92,7 +82,13 @@ export function Header({ view }: HeaderProps) {
             </Button>
             <Button
               className={`font-medium text-black ${
-                currentDay === new Date().getDate() ? 'bg-primary' : ''
+                isToday(
+                  new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    currentDate.getDate()
+                  )
+                ) && 'bg-primary'
               }`}
               color="primary"
               variant="ghost"
@@ -108,28 +104,6 @@ export function Header({ view }: HeaderProps) {
               <IconChevronRight className="w-4 h-4" />
             </Button>
           </div>
-        </div>
-      </div>
-      <div className="w-full overflow-auto">
-        <div className="grid grid-cols-8 items-center gap-3 w-[1000px] xl:w-full pb-5">
-          <Button className="text-background" variant="light" isDisabled>
-            <IconCalendar size={20} />
-          </Button>
-          {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((day, i) => (
-            <Button
-              key={day}
-              className={`gap-2 text-center text-black ${
-                weekDays[i] === new Date().getDate() &&
-                currentDate.getDate() === new Date().getDate()
-                  ? 'bg-primary'
-                  : 'bg-[#F5F6F7]'
-              }`}
-              size="lg"
-            >
-              <div className="text-sm">{day}</div>
-              <div className="text-xl font-semibold">{weekDays[i]}</div>
-            </Button>
-          ))}
         </div>
       </div>
     </div>

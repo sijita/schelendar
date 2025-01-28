@@ -1,5 +1,7 @@
+import { useCurrentDateStore } from '@/store/use-current-date-store';
 import type { Event } from '@/types/event';
 import {
+  addDays,
   addWeeks,
   eachDayOfInterval,
   endOfMonth,
@@ -11,11 +13,10 @@ import {
   startOfWeek,
   subWeeks,
 } from 'date-fns';
-import { useState } from 'react';
 
 export default function useCalendarFunctions({ events }: { events: Event[] }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const currentDate = useCurrentDateStore((state) => state.currentDate);
+  const setCurrentDate = useCurrentDateStore((state) => state.setCurrentDate);
 
   const monthDays = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentDate)),
@@ -31,9 +32,7 @@ export default function useCalendarFunctions({ events }: { events: Event[] }) {
   };
 
   const goToToday = () => setCurrentDate(new Date());
-
   const goToNextWeek = () => setCurrentDate(addWeeks(currentDate, 1));
-
   const goToPreviousWeek = () => setCurrentDate(subWeeks(currentDate, 1));
 
   const previousMonth = () =>
@@ -47,7 +46,7 @@ export default function useCalendarFunctions({ events }: { events: Event[] }) {
     );
 
   const handleDateClick = (date: Date) => {
-    setSelectedDate(date);
+    setCurrentDate(date);
   };
 
   const handleYearChange = (year: string) =>
@@ -64,7 +63,6 @@ export default function useCalendarFunctions({ events }: { events: Event[] }) {
     format,
     isSameMonth,
     isToday,
-    selectedDate,
     currentDate,
     setCurrentDate,
     monthDays,
@@ -74,5 +72,7 @@ export default function useCalendarFunctions({ events }: { events: Event[] }) {
     handleYearChange,
     hasEvents,
     years,
+    startOfWeek,
+    addDays,
   };
 }
