@@ -12,7 +12,6 @@ export default function Calendar({ events }: { events: Event[] }) {
     isToday,
     format,
     isSameMonth,
-    selectedDate,
     currentDate,
     handleDateClick,
     monthDays,
@@ -28,7 +27,7 @@ export default function Calendar({ events }: { events: Event[] }) {
   return (
     <>
       <EventModal
-        dateValue={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
+        dateValue={currentDate ? format(currentDate, 'yyyy-MM-dd') : ''}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
@@ -96,12 +95,12 @@ export default function Calendar({ events }: { events: Event[] }) {
             transition={{ duration: 0.3 }}
             className="grid grid-cols-7 gap-1"
           >
-            {monthDays.map((date, idx) => (
+            {monthDays.map((date, i) => (
               <motion.button
                 key={date.toString()}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.02 }}
+                transition={{ delay: i * 0.02 }}
                 whileHover={{ scale: 1.1 }}
                 onClick={() => {
                   handleDateClick(date);
@@ -111,16 +110,15 @@ export default function Calendar({ events }: { events: Event[] }) {
                   !isSameMonth(date, currentDate) && 'text-gray-500'
                 } ${
                   isToday(date) && 'bg-primary text-black hover:text-white'
-                } ${
-                  selectedDate?.toDateString() === date.toDateString() &&
-                  'bg-background'
                 } hover:bg-background`}
               >
                 <span className="text-sm">{format(date, 'd')}</span>
                 {hasEvents(date) && (
                   <div
                     className={`absolute bottom-1 w-1 h-1 rounded-full z-50 ${
-                      hasEvents(date) ? 'bg-primary' : 'bg-background'
+                      hasEvents(date) && !isToday(date)
+                        ? 'bg-primary'
+                        : 'bg-background'
                     }`}
                   />
                 )}
