@@ -55,7 +55,10 @@ export function EventsGrid() {
             className="grid grid-cols-[80px_repeat(7,minmax(0,1fr))] gap-5 py-2 border-b border-gray-300"
           >
             <div className="flex items-center justify-center">
-              <span className="text-sm text-gray-500">{hour}:00</span>
+              <span className="text-sm text-gray-500">
+                {hour}:00
+                <span className="text-xs">{hour > 11 ? 'pm' : 'am'}</span>
+              </span>
             </div>
             {getEventsForHour(hour).map((event, i) => {
               const { bgColor, textColor } = getRandomColor();
