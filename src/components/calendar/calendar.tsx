@@ -23,7 +23,7 @@ export default function Calendar({ events }: { events: Event[] }) {
   } = useCalendarFunctions({ events });
 
   return (
-    <div className="bg-[#181818] rounded-xl p-5 flex flex-col gap-5">
+    <div className="bg-[#181818] rounded-2xl p-5 flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 flex-wrap">
           <motion.h2
@@ -98,7 +98,7 @@ export default function Calendar({ events }: { events: Event[] }) {
                 handleDateClick(date);
                 setIsModalOpen('addModal');
               }}
-              className={`h-[40px] rounded-lg flex flex-col items-center justify-center relative transition-all duration-200 ${
+              className={`h-[40px] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-200 ${
                 !isSameMonth(date, currentDate) && 'text-gray-500'
               } ${
                 isToday(date) && 'bg-primary text-black hover:text-white'
