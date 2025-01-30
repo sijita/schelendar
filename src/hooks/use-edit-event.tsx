@@ -16,13 +16,15 @@ export default function useEditEvent() {
   const events = useEventsStore((state) => state.events);
   const eventToEdit = events.find((event) => event.id === params.get('id'));
 
-  const onSubmit = async (formData: FormData, eventId: string) => {
+  const onSubmit = async (formData: FormData) => {
     const data = Object.fromEntries(formData);
+
+    if (!eventToEdit) return;
 
     try {
       const parsedEvent = await eventSchema.safeParseAsync({
         ...data,
-        id: eventId,
+        id: eventToEdit?.id,
         date: format(new Date(`${data.date}T00:00:00`), 'dd-MM-yyyy', {
           locale: es,
         }),
@@ -38,7 +40,7 @@ export default function useEditEvent() {
         toast.error(errorMessages);
       }
 
-      const success = editEvent(eventId, parsedEvent.data as Partial<Event>);
+      const success = editEvent(eventToEdit?.id, parsedEvent.data as Partial<Event>);
 
       if (!success) {
         toast.error('Ya existe un evento en ese horario.');

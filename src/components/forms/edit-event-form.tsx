@@ -20,7 +20,7 @@ export default function EditEventForm() {
 
   return (
     <form
-      action={(formData) => onSubmit(formData, event.id)}
+      action={(formData) => onSubmit(formData)}
       className="flex flex-col gap-3"
     >
       <div className="flex items-center gap-10">
