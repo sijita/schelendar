@@ -81,6 +81,7 @@ export function EventsGrid() {
                   >
                     <IconX size={15} />
                   </Button>
+                  <p className='text-xs'>{event.hour}</p>
                   <Tooltip content={event.title}>
                     <span className="font-semibold capitalize truncate">
                       {event.title}

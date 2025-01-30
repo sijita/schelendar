@@ -70,8 +70,10 @@ export default function Aside() {
                   } pb-2`}
                 >
                   <div className="flex flex-col">
-                    <p className="text-primary">
-                      {format(new Date(formattedDate), 'MMM d', { locale: es })}
+                    <p className="text-primary capitalize">
+                      {format(new Date(`${formattedDate}T00:00:00`), 'MMM d', {
+                        locale: es,
+                      })}
                     </p>
                     <p className="text-xs text-gray-400">
                       {item.hour}
