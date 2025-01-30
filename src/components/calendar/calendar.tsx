@@ -98,7 +98,7 @@ export default function Calendar({ events }: { events: Event[] }) {
                 handleDateClick(date);
                 setIsModalOpen('addModal');
               }}
-              className={`h-[40px] rounded-2xl flex flex-col items-center justify-center relative transition-all duration-200 ${
+              className={`h-[40px] rounded-lg flex flex-col items-center justify-center relative transition-all duration-200 ${
                 !isSameMonth(date, currentDate) && 'text-gray-500'
               } ${
                 isToday(date) && 'bg-primary text-black hover:text-white'
