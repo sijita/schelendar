@@ -27,17 +27,21 @@ export default function useTimeGridFunctions() {
     weekDays.indexOf(Number(event.date.split('-')[0]));
 
   const getEventsForHour = (hour: number) => {
+    const baseHour = hour.toString().split(':')[0];
+
     return events.filter((event) => {
       const eventHour = event.hour.startsWith('0')
-        ? event.hour.slice(1)
-        : event.hour;
+        ? event.hour.slice(1).split(':')[0]
+        : event.hour.split(':')[0];
+
+      console.log(eventHour);
 
       const sameDay =
         weekDays.includes(Number(event.date.split('-')[0])) &&
         event.date.split('-')[1] === format(currentDate, 'MM').toString() &&
         event.date.split('-')[2] === format(currentDate, 'yyyy').toString();
 
-      return eventHour === `${hour}:00` && sameDay;
+      return eventHour === baseHour && sameDay;
     });
   };
 
